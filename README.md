@@ -16,8 +16,6 @@ and start receiving payments._
 
 `echosistema/simple-http-request" >= 1.0.1`
 
-📢 **Coming soon package to `PHP versions < 8.1`.**
-
 ## 💻 Installation
 
 First time using PayPal? Create your PayPal account
