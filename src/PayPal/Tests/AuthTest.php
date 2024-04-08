@@ -10,8 +10,8 @@ class AuthTest extends TestCase
 {
     use DisplayColor;
 
-    const CLIENT_ID = 'AY5eCS6eSp4Wtu43h9h_s1WOTB8sb8Ick86K85qHmTKhS0hfT4x2YozZpsY_pbb6PswzUGhmD76rT5P6';
-    const CLIENT_SECRET = 'EO9wfvHeV-Np3JmlfZ0JsAC8T1NBdoX7ik9hsYbLNethDRAXzEB_tvrzr8jDDmbITfSntRAv-YwJOT2a';
+    const CLIENT_ID = 'Client id';
+    const CLIENT_SECRET = 'Client secret';
     protected Auth $auth;
 
     function setUp(): void
