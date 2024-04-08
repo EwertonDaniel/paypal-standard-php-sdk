@@ -107,7 +107,6 @@ class PurchaseUnitTest extends TestCase
             ->setQuantity(1);
         if (!empty($this->items[0]->toArray())) {
             print $this->success("Item Creation => OK");
-            print_r($this->items[0]->toArray());
         }
         $this->assertIsArray($this->items[0]->toArray());
     }
@@ -125,7 +124,6 @@ class PurchaseUnitTest extends TestCase
         $items = $this->purchase_unit->getItems();
         if (!empty($items)) {
             print $this->success("Payee Setter => OK");
-            print_r($items);
         }
         $this->assertIsArray($items);
     }
@@ -139,7 +137,6 @@ class PurchaseUnitTest extends TestCase
         $payee = $this->purchase_unit->getPayee();
         if (!empty($payee)) {
             print $this->success("Payee Setter => OK");
-            print_r($payee);
         }
         $this->assertIsArray($payee);
     }
@@ -153,7 +150,6 @@ class PurchaseUnitTest extends TestCase
         $payee = $this->purchase_unit->getPayee();
         if (!empty($payee)) {
             print $this->success("Payee Class => OK");
-            print_r($payee);
         }
         $this->assertIsArray($payee);
     }
@@ -175,7 +171,6 @@ class PurchaseUnitTest extends TestCase
         $shipping = $this->purchase_unit->getShipping();
         if (!empty($shipping)) {
             print $this->success("Shipping Setter => OK");
-            print_r($shipping);
         }
         $this->assertIsArray($shipping);
     }
@@ -198,7 +193,6 @@ class PurchaseUnitTest extends TestCase
         $shipping = $this->purchase_unit->getShipping();
         if (!empty($shipping)) {
             print $this->success("Shipping Class => OK");
-            print_r($shipping);
         }
         $this->assertIsArray($shipping);
     }
@@ -234,7 +228,6 @@ class PurchaseUnitTest extends TestCase
         $array = $this->purchase_unit->toArray();
         if (!empty($array)) {
             print $this->success("To Array => OK");
-            print_r($array);
         }
         $this->assertIsArray($array);
     }

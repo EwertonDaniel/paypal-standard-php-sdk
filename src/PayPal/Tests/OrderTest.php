@@ -4,7 +4,6 @@ namespace EwertonDaniel\PayPal\Tests;
 
 use EwertonDaniel\PayPal\Auth;
 use EwertonDaniel\PayPal\Exceptions\OrderException;
-use EwertonDaniel\PayPal\Exceptions\PayPalAuthenticationException;
 use EwertonDaniel\PayPal\Exceptions\ValidationException;
 use EwertonDaniel\PayPal\Order;
 use EwertonDaniel\PayPal\PurchaseUnit\Item;
@@ -18,28 +17,16 @@ class OrderTest extends TestCase
 {
     use DisplayColor;
 
-    protected string $client_id;
-    protected string $client_secret;
     const RETURN_URL = 'https://example.com/returnUrl';
     const CANCEL_URL = 'https://example.com/cancelUrl';
     const NOTIFY_URL = 'https://example.com/notifyUrl';
+    const CLIENT_ID = 'Client id';
+    const CLIENT_SECRET = 'Client secret';
     protected Auth $auth;
-    const CLIENT_ID = '#';
-    const CLIENT_SECRET = '#';
 
-    public function setCredentials(string $client_id, string $client_secret)
-    {
-        $this->client_id = $client_id;
-        $this->client_secret = $client_secret;
-    }
-
-    /**
-     * @throws GuzzleException
-     * @throws PayPalAuthenticationException
-     */
     function setUp(): void
     {
-        $this->auth = new Auth($this->client_id ?? self::CLIENT_ID, $this->client_secret ?? self::CLIENT_SECRET);
+        $this->auth = new Auth(self::CLIENT_ID, self::CLIENT_SECRET);
         $this->order = new Order($this->auth);
     }
 
@@ -108,8 +95,7 @@ class OrderTest extends TestCase
             ->addItemWithBasicData('Blacksaber', 1, $value)
             ->toArray();
         if (!empty($purchase_unit)) {
-            print $this->success('Purchase Unit => OK');
-            print_r($purchase_unit);
+            print $this->success('Purchase Unit => OK', true);
         }
         $this->assertIsArray($purchase_unit);
     }
@@ -132,8 +118,7 @@ class OrderTest extends TestCase
             )->setReturnUrl(self::RETURN_URL)
             ->toArray();
         if (!empty($payment_source)) {
-            print $this->success('Payment Source => OK');
-            print_r($payment_source);
+            print $this->success('Payment Source => OK', true);
         }
         $this->assertIsArray($payment_source);
     }
@@ -146,12 +131,12 @@ class OrderTest extends TestCase
     function testCreateOrder(): void
     {
         $item = new Item();
-        $item->setName('Blacksaber Mandalore')->setQuantity(1)->setUnitAmount('BRL',29900);
+        $item->setName('Blacksaber Mandalore')->setQuantity(1)->setUnitAmount('BRL', 29900);
         $this->order
             ->setPaypalRequestId()
             ->setIntent('CAPTURE')
             ->purchaseUnit()
-            ->setDiscount('BRL',900)
+            ->setDiscount('BRL', 900)
             ->setCurrencyCode('BRL')
             ->addItem($item)
             ->setReferenceId()
@@ -173,20 +158,23 @@ class OrderTest extends TestCase
             print $this->information('ID: ' . $response['id']);
             print $this->information('Status: ' . $response['status']);
             print $this->information('Self Url: ' . $response['links']['self']['url']);
-            print $this->information('Payer Action: ' . $response['links']['payer_action']['url']);
+            print $this->information('Payer Action: ' . $response['links']['payer_action']['url'], true);
+            $this->orderDetails($response['id']);
         }
         $this->assertIsArray($response);
     }
+
 
     /**
      * @throws GuzzleException
      * @throws ValidationException
      * @throws OrderException
      */
-    function testOrderDetails(): void
+    function orderDetails(string|null $order_id = null): void
     {
-        $detail = $this->order->setOrderId('4C238569VN099203H')->detail();
-        print_r($detail);
+        $detail = $this->order->setOrderId($order_id)->detail();
+        print $this->success('Order Details => OK');
+        print $this->information('ID: ' . $order_id);
         $this->assertIsArray($detail);
     }
 }

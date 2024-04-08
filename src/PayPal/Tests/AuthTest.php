@@ -3,33 +3,20 @@
 namespace EwertonDaniel\PayPal\Tests;
 
 use EwertonDaniel\PayPal\Auth;
-use EwertonDaniel\PayPal\Exceptions\PayPalAuthenticationException;
 use EwertonDaniel\PayPal\Traits\DisplayColor;
-use GuzzleHttp\Exception\GuzzleException;
 use PHPUnit\Framework\TestCase;
 
 class AuthTest extends TestCase
 {
     use DisplayColor;
-    protected string $client_id;
-    protected string $client_secret;
+
+    const CLIENT_ID = 'AY5eCS6eSp4Wtu43h9h_s1WOTB8sb8Ick86K85qHmTKhS0hfT4x2YozZpsY_pbb6PswzUGhmD76rT5P6';
+    const CLIENT_SECRET = 'EO9wfvHeV-Np3JmlfZ0JsAC8T1NBdoX7ik9hsYbLNethDRAXzEB_tvrzr8jDDmbITfSntRAv-YwJOT2a';
     protected Auth $auth;
-    const CLIENT_ID = '#';
-    const CLIENT_SECRET = '#';
 
-    public function setCredentials(string $client_id, string $client_secret)
-    {
-        $this->client_id = $client_id;
-        $this->client_secret = $client_secret;
-    }
-
-    /**
-     * @throws GuzzleException
-     * @throws PayPalAuthenticationException
-     */
     function setUp(): void
     {
-        $this->auth = new Auth($this->client_id ?? self::CLIENT_ID, $this->client_secret ?? self::CLIENT_SECRET);
+        $this->auth = new Auth(self::CLIENT_ID, self::CLIENT_SECRET);
     }
 
 
@@ -38,7 +25,9 @@ class AuthTest extends TestCase
         $scopes = $this->auth->getScopes();
         if (!empty($scopes)) {
             print $this->success('Scopes');
-            print_r($scopes);
+            foreach ($scopes as $scope) {
+                print $this->attention($scope);
+            }
         }
         $this->assertIsArray($scopes);
     }

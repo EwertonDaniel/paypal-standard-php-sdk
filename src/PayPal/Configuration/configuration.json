@@ -25,6 +25,10 @@
     "order_detail": {
       "uri": "/v2/checkout/orders/{id}",
       "method": "get"
+    },
+    "order_checkout": {
+      "uri": "/v2/checkout/orders/{id}",
+      "method": "get"
     }
   }
 }

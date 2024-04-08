@@ -76,7 +76,7 @@ trait OrderSetters
     {
         $intent = strtoupper($intent);
         if (!in_array($intent, ['CAPTURE', 'AUTHORIZE'])) {
-            throw new ValidationException('Entered intent is not a valid value!, VAlid values: CPATURE, AUTHORIZE');
+            throw new ValidationException('Entered intent is not a valid value!, Valid values: CAPTURE, AUTHORIZE');
         }
         $this->intent = $intent;
         return $this;
@@ -93,6 +93,17 @@ trait OrderSetters
     }
 
     /**
+     * @param bool $class
+     * @return PaymentSource|array
+     * @throws ValidationException
+     */
+    public function getPaymentSource(bool $class = false): PaymentSource|array
+    {
+        $payment_source = is_array($this->payment_source) ? $this->payment_source : $this->getPaymentSourceClassOrFallback($class);
+        return !empty($payment_source) ? $payment_source : throw new ValidationException('The payment source is empty');
+    }
+
+    /**
      * @param PaymentSource $payment_source
      * @return Order
      */
@@ -102,15 +113,9 @@ trait OrderSetters
         return $this;
     }
 
-    /**
-     * @param bool $class
-     * @return PaymentSource|array
-     * @throws ValidationException
-     */
-    public function getPaymentSource(bool $class = false): PaymentSource|array
+    private function getPaymentSourceClassOrFallback(bool $class): PaymentSource|array
     {
-        $payment_source = is_array($this->payment_source) ? $this->payment_source : ($class ? $this->payment_source : $this->payment_source->toArray());
-        return !empty($payment_source) ? $payment_source : throw new ValidationException('The payment source is empty');
+        return $class ? $this->payment_source : $this->payment_source->toArray();
     }
 
     public function setReturnType(string $return_type): static
@@ -119,22 +124,22 @@ trait OrderSetters
         return $this;
     }
 
+    public function setOrderId(string $order_id): static
+    {
+        $this->order_id = $order_id;
+        return $this;
+    }
+
     /**
      * @throws OrderException
      */
     protected function setUrl(string $endpoint): void
     {
-        $url = $this->configuration->setIsProduction($this->auth->is_production ?? false)->getUrl();
+        $url = $this->configuration->setIsProduction($this->auth->is_production)->getUrl();
         if (!$url) throw new OrderException();
         $endpoint = $this->configuration->getEndpoint($endpoint);
         if (!isset($endpoint['uri'])) throw new OrderException();
         $this->url = $url . $endpoint['uri'];
-    }
-
-    public function setOrderId(string $order_id): static
-    {
-        $this->order_id = $order_id;
-        return $this;
     }
 
 }
